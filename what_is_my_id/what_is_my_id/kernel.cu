@@ -143,7 +143,7 @@ cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size)
     cudaStatus = cudaMalloc((void**)&dev_c, size * sizeof(int));
     if (cudaStatus != cudaSuccess) {
         fprintf(stderr, "cudaMalloc failed!");
-        goto Error;
+        goto Error; 
     }
 
     cudaStatus = cudaMalloc((void**)&dev_a, size * sizeof(int));
@@ -203,3 +203,4 @@ Error:
     
     return cudaStatus;
 }
+//两个线程块，两个线程束
