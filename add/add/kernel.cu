@@ -25,6 +25,27 @@ void add(int n, float * x, float *y)
 	}
 }
 
+__global__
+void add2(int n, float *x, float *y)
+{
+	int index = threadIdx.x;
+	int stride = blockDim.x;
+	for (int i = 0; i < n; i+=stride)
+	{
+		y[i] = x[i] + y[i];
+	}
+}
+
+__global__
+void add3(int n, float *x, float *y)
+{
+	int index = blockIdx.x * blockDim.x + threadIdx.x;
+	int stride = blockDim.x * gridDim.x;
+	for (int i = index; i < n; i+=stride)
+	{
+		y[i] = x[i] + y[i];
+	}
+}
 
 int main()
 {
@@ -84,10 +105,56 @@ int main()
 		maxError = fmax(maxError, fabs(y[i] - 3.0f));
 	std::cout << "Max error: " << maxError << std::endl;
 
+;
 	// Free memory
 	cudaFree(x);
 	cudaFree(y);
 
+	//---------------------------
+
+	int N2 = 1 << 20;
+	float *x2, *y2;
+
+	cudaMallocManaged(&x2, N2 * sizeof(float));
+	cudaMallocManaged(&y2, N2 * sizeof(float));
+
+	// initialize x and y arrays on the host
+	for (int i = 0; i < N2; i++) {
+		x2[i] = 1.0f;
+		y2[i] = 2.0f;
+	}
+
+	add2 <<<1, 256 >>> (N2, x2, y2);
+	// Wait for GPU to finish before accessing on host
+	cudaDeviceSynchronize();
+
+	std::cout << "Result2 is " << *y2 << std::endl;
+	// Free memory
+	cudaFree(x2);
+	cudaFree(y2);
+
+	//---------------------------
+
+	int N3 = 1 << 20;
+	float *x3, *y3;
+
+	cudaMallocManaged(&x3, N3 * sizeof(float));
+	cudaMallocManaged(&y3, N3 * sizeof(float));
+
+	// initialize x and y arrays on the host
+	for (int i = 0; i < N3; i++) {
+		x3[i] = 4.0f;
+		y3[i] = 2.0f;
+	}
+
+	add2 <<<1, 256 >> > (N3, x3, y3);
+	// Wait for GPU to finish before accessing on host
+	cudaDeviceSynchronize();
+
+	std::cout << "Result3 is " << *y3 << std::endl;
+	// Free memory
+	cudaFree(x3);
+	cudaFree(y3);
 
     return 0;
 }
