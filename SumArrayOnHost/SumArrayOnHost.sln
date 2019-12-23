@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.271
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SumArrayOnHost", "SumArrayOnHost\SumArrayOnHost.vcxproj", "{AC3CB5F5-376B-4BA9-A301-8EF58C5B51A3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AC3CB5F5-376B-4BA9-A301-8EF58C5B51A3}.Debug|x64.ActiveCfg = Debug|x64
+		{AC3CB5F5-376B-4BA9-A301-8EF58C5B51A3}.Debug|x64.Build.0 = Debug|x64
+		{AC3CB5F5-376B-4BA9-A301-8EF58C5B51A3}.Release|x64.ActiveCfg = Release|x64
+		{AC3CB5F5-376B-4BA9-A301-8EF58C5B51A3}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C5F5D465-C6B6-4C6A-AAF3-6F1A1DCA3B5B}
+	EndGlobalSection
+EndGlobal

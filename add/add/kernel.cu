@@ -147,7 +147,7 @@ int main()
 		y3[i] = 2.0f;
 	}
 
-	add2 <<<1, 256 >> > (N3, x3, y3);
+	add2 <<<1, 256 >>> (N3, x3, y3);
 	// Wait for GPU to finish before accessing on host
 	cudaDeviceSynchronize();
 
@@ -155,6 +155,31 @@ int main()
 	// Free memory
 	cudaFree(x3);
 	cudaFree(y3);
+
+
+	int N4 = 1 << 20;
+	float *x4, *y4;
+
+
+	int blocksize = 256;
+	int numofblock = (N4 + blocksize - 1) / blocksize;
+
+	cudaMallocManaged(&x4, N4 * sizeof(float));
+	cudaMallocManaged(&y4, N4 * sizeof(float));
+
+	// initialize x and y arrays on the host
+	for (int i = 0; i < N4; i++) {
+		x4[i] = 4.0f;
+		y4[i] = 9.0f;
+	}
+
+	add3 <<<numofblock, blocksize >>> (N4, x4, y4);
+	cudaDeviceSynchronize();
+	std::cout << "Result4 is " << *y4 << std::endl;
+	// Free memory
+	cudaFree(x4);
+	cudaFree(y4);
+
 
     return 0;
 }
