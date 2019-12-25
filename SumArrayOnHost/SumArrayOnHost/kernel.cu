@@ -8,6 +8,7 @@
 #include <iostream>
 #include <Windows.h>
 
+//this code has bug!
 
 
 
@@ -76,7 +77,7 @@ int main(int argc, char **argv)
 	cudaSetDevice(dev);
 
 
-	int nElem = 1<<24;
+	int nElem = 1<<12;
 	//printf("Vector size:32");
 
 	size_t nByte = nElem * sizeof(float);
@@ -114,8 +115,10 @@ int main(int argc, char **argv)
 	SYSTEMTIME st_gpu, end_gpu;
 	int total_gpu;
 	GetSystemTime(&st_gpu);
-	SumArrayOnGpu <<<grid, block >>> (d_A, d_B, d_C);
-	cudaDeviceSynchronize();
+	SumArrayOnGpu <<<grid, block>>> (d_A, d_B, d_C);
+
+	//cudaDeviceSynchronize();
+
 	GetSystemTime(&end_gpu);
 	total_gpu = end_gpu.wMilliseconds - st_gpu.wMilliseconds;
 	printf("the start time use of GPU cal is %d,\nthe end time of GPU is %d,\n the total use time is %d\n", st_gpu.wMilliseconds, end_gpu.wMilliseconds, total_gpu);
