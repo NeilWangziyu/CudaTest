@@ -106,6 +106,14 @@ int main()
 	// launch the kernel
 	global_scan <<<1, ARRAY_SIZE >>> (d_out, d_in);
 
+		//kernel << <Dg, Db, Ns, S >> > (param list);
+
+		//Dg： int型或者dim3类型(x, y, z)。 用于定义一个grid中的block是如何组织的。 int型则直接表示为1维组织结构。
+		//Db： int型或者dim3类型(x, y, z)。 用于定义一个block中的thread是如何组织的。 int型则直接表示为1维组织结构。
+		//Ns： size_t类型，可缺省，默认为0。 用于设置每个block除了静态分配的共享内存外，最多能动态分配的共享内存大小，单位为byte。 0表示不需要动态分配。
+		//S： cudaStream_t类型，可缺省，默认为0。 表示该核函数位于哪个流。
+
+
 	// copy back the result array to the GPU
 	cudaMemcpy(h_out, d_out, ARRAY_BYTES, cudaMemcpyDeviceToHost);
 

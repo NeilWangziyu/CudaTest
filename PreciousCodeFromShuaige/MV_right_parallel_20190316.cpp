@@ -571,7 +571,7 @@ int main()
 
 	DWORD time_kernel = GetTickCount(); //获取毫秒级数目
 
-	theta_calculate_WithCuda << <numBlocks, threadsPerBlock >> > (d_init_M1, beamDASDAS, x_pointer,wmv1,wmv2,Rxx,xL,temp);
+	theta_calculate_WithCuda <<<numBlocks, threadsPerBlock >>> (d_init_M1, beamDASDAS, x_pointer,wmv1,wmv2,Rxx,xL,temp);
 	//Above has got the x_pointer and M_elements, they are all in device memory;
 	//Then we should calculate the wmv and beamDASDAS by cublasxt;
 
