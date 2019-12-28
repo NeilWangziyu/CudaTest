@@ -1,0 +1,102 @@
+#include <iostream>
+#include <stdarg.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+#include "cuda_runtime.h"
+#include "device_launch_parameters.h"
+using namespace std;
+typedef struct {
+	/* Î¬¶È */
+	int rows;
+	int cols;
+	/* ÄÚÈÝ */
+	double** data;
+} Matrix;
+
+__device__ void add_matrix(Matrix m) {
+	for (int i = 0; i < m.rows; ++i)
+	{
+		//m.data[i] = (double*) malloc(sizeof(double) * m.cols);
+	  //  assert(m.data[i]);
+		for (int j = 0; j < m.cols; ++j) {
+			m.data[i][j] = m.data[i][j] + 1;
+		}
+	}
+}
+
+__device__ void print_matrix(Matrix m) {
+	int i;
+	int j;
+	for (i = 0; i < m.rows; ++i) {
+		for (j = 0; j < m.cols; ++j) {
+			if (j > 0) {
+				printf(" ");
+			}
+			printf("%6.2f", m.data[i][j]);
+		}
+		printf("\n");
+	}
+}
+
+__device__ void simple() {
+	printf("This is from device function!\n");
+}
+__global__ void func_GPU() {
+
+
+	Matrix m;
+	
+	int i;
+	int j;
+	/*int **A;
+	int B = 3;
+	printf("B is: %d\n", B);
+	A[0][0] = 5;
+	printf("A[0][0] is: %d\n", A[0][0]);*/
+	simple();
+	int array[5] = { 1,2,2,4,5 };
+	for (i = 0; i < 5; i++)
+	{
+		printf("array[%d] is %d\n", i, array[i]);
+	}
+
+	int array2[2][3] = { {1,2,2},{ 4,5,6 } };
+	for (i = 0; i < 2; i++)
+	{
+		for(j=0;j<3;j++)
+		printf("array2[%d][%d] is %d\n", i,j, array2[i][j]);
+	}
+	m.rows = 2;
+	m.cols = 2;
+	printf("He000!\n");
+
+	m.data[0][0] = 0.0;
+	printf("m.data[0][0] is: %f\n", m.data[0][0]);
+	for (i = 0; i < m.rows; ++i)
+	{
+		//m.data[i] = (double*) malloc(sizeof(double) * m.cols);
+	  //  assert(m.data[i]);
+		for (j = 0; j < m.cols; ++j) {
+			m.data[i][j] = 0.0;
+		}
+	}
+	printf("He!\n");
+	add_matrix(m);
+	print_matrix(m);
+
+}
+
+
+int main() {
+	cout << "Heeee!" << endl;
+	//int **A;
+	////int B = 3;
+	////printf("B is: %d\n", B);
+	//A[0][0] = 5;
+
+	//printf("A[0][0] is: %d\n", A[0][0]);
+	func_GPU << <1, 1 >> > ();
+	return 0;
+}

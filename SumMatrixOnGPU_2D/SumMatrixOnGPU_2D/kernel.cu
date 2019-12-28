@@ -8,7 +8,8 @@
 #include <time.h>
 #include <stdio.h>
 #include <iostream>
-#include <Windows.h>
+#include <windows.h>
+
 
 cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);
 
@@ -158,11 +159,11 @@ int main()
 	//printf("Using Device: %d: %s \n", dev, deviceProb.name);
 	printf("Using Device: %d\n", dev);
 
-	int nx = 1<<3;
-	int ny = 1<<3;
+	int nx = 1<<12;
+	int ny = 1<<12;
 	int nxy = nx * ny;
 	int nBytes = nxy * sizeof(float);
-	printf("matrix size: nx: %d, ny: %d", nx, ny);
+	printf("matrix size: nx: %d, ny: %d\n", nx, ny);
 
 
 	//malloc
@@ -177,14 +178,20 @@ int main()
 	initialData(h_A, nxy);
 	initialData(h_B, nxy);
 
-	printmatrix(h_A, nx, ny);
-	printmatrix(h_B, nx, ny);
+	//printmatrix(h_A, nx, ny);
+	//printmatrix(h_B, nx, ny);
 
 
 	memset(hostRef, 0, nBytes);
 	memset(gpuRef, 0, nBytes);
 
+	DWORD time_kernel = GetTickCount(); //获取毫秒级数目
+
+
 	sumMatrixOnHost(h_A, h_B, hostRef, nx, ny);
+	
+	std::cout << "Totally host function cost:" << GetTickCount() - time_kernel << " mSecond" << std::endl;
+
 
 	float *d_MatA, *d_MatB, *d_MatC;
 	cudaMalloc((void**)&d_MatA, nBytes);
@@ -200,18 +207,25 @@ int main()
 	dim3 block(dimx, dimy);
 	dim3 grid((nx + block.x - 1) / block.x, (ny + block.y - 1) / block.y);
 
+
+
+
+	DWORD time_kernel_gpu = GetTickCount(); //获取毫秒级数目
+
 	SumMatrixOnGPU2D <<<grid, block >>> (d_MatA, d_MatB, d_MatC, nx, ny);
+
+	std::cout << "Totally GPU function cost:" << GetTickCount() - time_kernel_gpu << "mSecond" << std::endl;
 
 
 
 	cudaMemcpy(gpuRef, d_MatC, nBytes, cudaMemcpyDeviceToHost);
 
 	printf("host result:\n");
-	printmatrix(hostRef, nx, ny);
+	//printmatrix(hostRef, nx, ny);
 
 	printf("gpu result:\n");
 
-	printmatrix(gpuRef, nx, ny);
+	//printmatrix(gpuRef, nx, ny);
 
 	CheckResult(hostRef, gpuRef, nxy);
 
